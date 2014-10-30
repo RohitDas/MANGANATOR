@@ -3,10 +3,11 @@ package manga.anime.com.manganator;
 
 
 /* MANGANATER is an android application wherein you could read manga to begin with */
-
+/* This App makes url request to mangareader to get all the information about the latest animes. */
 
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,47 +20,62 @@ import android.widget.VideoView;
 import android.widget.ListView;
 import android.view.View;
 import android.widget.Toast;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HttpContext;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import android.widget.Button;
+import android.util.Log;
+import java.io.IOException;
+import java.io.InputStream;
+import android.content.Intent;
 
 public class MyActivity extends Activity {
-
+    int lock = 0;
+    String result = "";
+    InputStream in = null ;
+    JSONObject  jsonObject = null ;
+    String[] anime_list= new String[20000];
+     Button button ;
+    Intent intent;
+    Bundle bundle = new Bundle();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
         final ListView _manga_list = (ListView)findViewById(R.id.listview);
-        String[] _manga_ = new String[] {
-                                            "Naruto Shippuden",
-                                            "Fairy Tail",
-                                            "Bleach",
-                                            "One Piece"
-                                        };
-        ArrayAdapter<String> _manga_adapter = new ArrayAdapter<String>(this,R.layout.list_item,R.id.manga_text,_manga_);
-        _manga_list.setAdapter(_manga_adapter);
-
-
-        _manga_list.setOnItemClickListener(new OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-
-                // ListView Clicked item index
-                int itemPosition = position;
-
-                // ListView Clicked item value
-                String itemValue = (String) _manga_list.getItemAtPosition(position);
-
-                // Show Alert
-                Toast.makeText(getApplicationContext(),
-                        "Position :" + itemPosition + "  ListItem : " + itemValue, Toast.LENGTH_LONG)
-                        .show();
-
-            }
-
-        });
-
+        addListeneronButton();
+        Log.e("STATUS",MangaAsync.Status.FINISHED.toString());
+        /* Wait for MangaAsync to finish */
 
     }
+
+    public void addListeneronButton()
+    {
+        button = (Button)findViewById(R.id.button1);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              new MangaAsync().execute();
+
+            }
+        });
+    }
+
 
 
     @Override
@@ -80,4 +96,62 @@ public class MyActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private class MangaAsync extends AsyncTask<String,Integer,String> {
+
+        protected String  doInBackground(String... params) {
+            // TODO Auto-generated method stub
+            get_Data();
+            return null;
+
+        }
+        protected void onPostExecute(String results){
+            Toast.makeText(getApplicationContext(), "command sent", Toast.LENGTH_LONG).show();
+            bundle.putString("Json_Manga",result);
+
+           intent  = new Intent(MyActivity.this,Manga_List_Activity.class);
+
+            intent.putExtras(bundle);
+            startActivity(intent);
+
+        }
+
+
+
+    }
+
+    /* Post Method */
+    public void get_Data()
+    {
+        try {
+            HttpClient client = new DefaultHttpClient();
+            HttpGet get_request = new HttpGet("http://www.mangaeden.com/api/list/0/");
+            HttpResponse response = client.execute(get_request);
+            HttpEntity entity = response.getEntity();
+            in =  entity.getContent();
+
+        } catch(Exception e)
+        {
+            Log.e("Error","err");
+        }
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            in.close();
+            result = sb.toString();
+            Log.e("Result",result);
+        } catch(Exception e) {
+            Log.e("Error","error");
+        }
+
+
+
+
+    }
+
+
 }
