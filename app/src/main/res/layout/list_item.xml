@@ -4,38 +4,45 @@
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:padding="6dip" >
 
-    <ImageView
+   <!-- <ImageView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="6dip"
+        android:layout_marginRight="0dp"
+        android:layout_marginLeft="0dp"
         android:contentDescription="TODO"
-        android:src="@drawable/naruto" />
+        android:scaleX="2.4"
+        android:scaleY="1.5"
+        android:src="@drawable/images" /> -->
+
 
     <TextView
         android:id="@+id/manga_text"
         android:layout_width="fill_parent"
-        android:layout_height="26dip"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_toRightOf="@id/icon"
-        android:ellipsize="marquee"
-        android:singleLine="true"
-        android:text="Description"
-        android:textSize="12sp" />
-
-    <TextView
-        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
+        android:layout_alignWithParentIfMissing="true"
+        android:gravity="center_vertical"
+        android:text="Example application"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:textSize="15dp" />
+ <!--    <TextView
+        android:id="@+id/manga_text1"
         android:layout_below="@id/manga_text"
+        android:layout_width="fill_parent"
+        android:layout_marginTop="17dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_toRightOf="@id/icon"
         android:gravity="center_vertical"
         android:text="Example application"
-        android:textSize="16sp" />
-
+        android:textColor="#000000"
+        android:textSize="10sp" />
+  -->
 </RelativeLayout>

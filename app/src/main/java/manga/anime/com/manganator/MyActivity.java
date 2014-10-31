@@ -42,6 +42,8 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import android.content.Intent;
+import android.widget.ProgressBar;
+import android.widget.EditText;
 
 public class MyActivity extends Activity {
     int lock = 0;
@@ -52,12 +54,17 @@ public class MyActivity extends Activity {
      Button button ;
     Intent intent;
     Bundle bundle = new Bundle();
+
+    ProgressBar progess_bar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
         final ListView _manga_list = (ListView)findViewById(R.id.listview);
+        progess_bar =  (ProgressBar)findViewById(R.id.progressBar1);
+
+        progess_bar.setVisibility(View.GONE);
         addListeneronButton();
         Log.e("STATUS",MangaAsync.Status.FINISHED.toString());
         /* Wait for MangaAsync to finish */
@@ -70,6 +77,8 @@ public class MyActivity extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+              button.setVisibility(View.GONE);
+              progess_bar.setVisibility(View.VISIBLE);
               new MangaAsync().execute();
 
             }
@@ -107,11 +116,8 @@ public class MyActivity extends Activity {
         }
         protected void onPostExecute(String results){
             Toast.makeText(getApplicationContext(), "command sent", Toast.LENGTH_LONG).show();
-            bundle.putString("Json_Manga",result);
-
-           intent  = new Intent(MyActivity.this,Manga_List_Activity.class);
-
-            intent.putExtras(bundle);
+            DataStore.set_MANGA_DATA(result);
+            intent  = new Intent(MyActivity.this,Manga_List_Activity.class);
             startActivity(intent);
 
         }
@@ -125,7 +131,7 @@ public class MyActivity extends Activity {
     {
         try {
             HttpClient client = new DefaultHttpClient();
-            HttpGet get_request = new HttpGet("http://www.mangaeden.com/api/list/0/");
+            HttpGet get_request = new HttpGet("http://www.mangaeden.com/api/list/0/?p=1");
             HttpResponse response = client.execute(get_request);
             HttpEntity entity = response.getEntity();
             in =  entity.getContent();

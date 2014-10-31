@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/MANGANATOR.iml" filepath="$PROJECT_DIR$/MANGANATOR.iml" />
       <module fileurl="file://$PROJECT_DIR$/Manganator.iml" filepath="$PROJECT_DIR$/Manganator.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
